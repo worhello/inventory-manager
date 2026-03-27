@@ -1,0 +1,8 @@
+
+@for (item of inventoryService.getAllInventory(); track $index) {
+    <div class="item-wrapper">
+        <p>{{item.name}}</p>
+        <p>{{item.category}}</p>
+        <p>Current Quantity: {{item.quantity}} / Minimum Quantity: {{item.minQuantity}}</p>
+    </div>
+}

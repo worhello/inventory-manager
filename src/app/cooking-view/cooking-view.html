@@ -1,0 +1,13 @@
+<h2>Remove items from the inventory</h2>
+
+@for (item of itemsToBeRemoved; track $index) {
+    <div>
+        <app-inventory-search-input (inventoryItemSelected)="onInventoryItemSelected(item, $event)" (newInventoryItemSelected)="onInvalidItemSelected(item)"/>
+        <input [(ngModel)]="item.quantity"/>
+        @if (!item.valid) {
+            <p class="error-message">This isn't a valid item</p>
+        }
+    </div>
+}
+
+<input type="button" (click)="onSubmit()" value="Remove Items">
