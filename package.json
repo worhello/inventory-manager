@@ -19,17 +19,18 @@
     "@angular/material": "^21.2.4",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
-    "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^21.2.5",
     "@angular/cli": "^21.2.5",
     "@angular/compiler-cli": "^21.2.0",
+    "@types/uuid": "^10.0.0",
     "angular-cli-ghpages": "^3.0.2",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",
+    "uuid": "^13.0.0",
     "vitest": "^4.0.8"
   }
 }

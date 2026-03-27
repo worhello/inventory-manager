@@ -1,12 +1,13 @@
 
-export type InventoryQuantityKey = {
+export interface InventoryQuantityKey {
     id: string,
     quantity: number
 }
 
-export type InventoryItem = InventoryQuantityKey & {
+export interface InventoryItem extends InventoryQuantityKey {
     name: string,
     minQuantity: number,
     category: string,
     expiry?: Date,
+    checked?: boolean
 }

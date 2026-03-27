@@ -1,5 +1,5 @@
 
-@for (item of inventoryService.getAllInventory(); track item) {
+@for (item of inventoryService.getAllInventory(); track $index) {
     <div class="item-wrapper">
         <p>{{item.name}}</p>
         <p>{{item.category}}</p>

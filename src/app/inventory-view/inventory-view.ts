@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { InventoryService } from '../inventory-service';
 import { InventoryItem } from '../shared/models/model';
 import { InventoryItemEdit } from '../shared/inventory-item-edit/inventory-item-edit';
+import { InventoryItemEditTrigger } from '../shared/inventory-item-edit-trigger';
 
 @Component({
   selector: 'app-inventory-view',
@@ -14,43 +15,27 @@ import { InventoryItemEdit } from '../shared/inventory-item-edit/inventory-item-
 export class InventoryView {
 
   dialog = inject(MatDialog);
+  inventoryItemEditTrigger = inject(InventoryItemEditTrigger);
 
   constructor(public inventoryService: InventoryService, private cdRef: ChangeDetectorRef) {
-    //
   }
 
   editItem(item: InventoryItem) {
-    this.openInventoryItemEdit(item, (updatedItem) => {
-      this.inventoryService.editItem(updatedItem);
-      this.cdRef.markForCheck();
-    });
+    this.openInventoryItemEdit(item);
   }
 
   deleteItem(item: InventoryItem) {
     this.inventoryService.deleteItem(item.id);
-      this.cdRef.markForCheck();
+    this.cdRef.markForCheck();
   }
 
   addNewItem() {
-    this.openInventoryItemEdit(null, (newItem) => {
-      this.inventoryService.createItem(newItem);
-      this.cdRef.markForCheck();
-    });
+    this.openInventoryItemEdit();
   }
 
-  private openInventoryItemEdit(itemToEdit: InventoryItem | null, itemCreatedFunc: (item: InventoryItem) => void) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    if (itemToEdit) {
-      dialogConfig.data = itemToEdit;
-    }
-
-    let dialogRef = this.dialog.open(InventoryItemEdit, dialogConfig);
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        itemCreatedFunc(result);
-      }
+  private openInventoryItemEdit(item?: InventoryItem) {
+    this.inventoryItemEditTrigger.openInventoryItemEdit(item, () => {
+      this.cdRef.markForCheck();
     });
   }
 }

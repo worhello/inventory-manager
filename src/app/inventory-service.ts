@@ -1,67 +1,38 @@
 import { Injectable } from '@angular/core';
 import { InventoryItem, InventoryQuantityKey } from './shared/models/model';
-import { generate } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InventoryService {
 
-  inventory: Map<string, InventoryItem>;
-  categories: string[];
-
-  static generateSampleInventory(): Map<string, InventoryItem> {
-    let sampleData = new Map();
-    sampleData.set('sample-1', {
-      id: "sample-1",
-      name: "pizza",
-      quantity: 3,
-      minQuantity: 1,
-      category: 'freezer'
-    });
-    sampleData.set('sample-2', {
-      id: "sample-2",
-      name: "milk",
-      quantity: 1,
-      minQuantity: 1,
-      expiry: new Date(),
-      category: 'fridge'
-    });
-    sampleData.set('sample-3', {
-      id: "sample-3",
-      name: "smoked paprika",
-      quantity: 0,
-      minQuantity: 1,
-      category: 'spices'
-    });
-    return sampleData;
-  }
-
-  static generateSampleCategories(): string[] {
-    return [
-      'freezer',
-      'fridge',
-      'spices'
-    ]
-  }
+  inventory: Map<string, InventoryItem> = new Map();
+  categories: string[] = [];
 
   constructor() {
-    this.inventory = InventoryService.generateSampleInventory();
-    this.categories = InventoryService.generateSampleCategories();
+    this.readLocalStorage();
+  }
+  
+  private syncLocalStorage() {
+    localStorage.setItem('inventory', JSON.stringify(Array.from(this.inventory)));
+    localStorage.setItem('categories', JSON.stringify(Array.from(this.categories)));
+    
     this.readLocalStorage();
   }
 
-  private syncLocalStorage() {
-    // load this from localStorage
-    // this.inventory = new Map(JSON.parse(localStorage.getItem('inventory')));
-    // this.categories = new Array(JSON.parse(localStorage.getItem('categories')));
-  }
-
   private readLocalStorage() {
-    // localStorage.setItem('inventory', JSON.stringify(Array.from(this.inventory)));
-    // localStorage.setItem('categories', JSON.stringify(Array.from(this.categories)));
-  }
+    let inventoryFromStorage = localStorage.getItem('inventory');
+    if (inventoryFromStorage) {
+      this.inventory = new Map(JSON.parse(inventoryFromStorage));
+    }
 
+    let categoriesFromStorage = localStorage.getItem('categories');
+    if (categoriesFromStorage) {
+      this.categories = new Array(JSON.parse(categoriesFromStorage));
+    }
+  }
+  
   public getAllInventory(): Iterable<InventoryItem> {
     return this.inventory.values();
   }
@@ -71,6 +42,7 @@ export class InventoryService {
   }
 
   public createItem(item: InventoryItem) {
+    item.id = uuid();
     this._createOrUpdateItem(item);
     this.syncLocalStorage();
   }

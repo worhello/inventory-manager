@@ -3,7 +3,7 @@
 @for (item of itemsToBeRemoved; track $index) {
     <div>
         <app-inventory-search-input (inventoryItemSelected)="onInventoryItemSelected(item, $event)" (newInventoryItemSelected)="onInvalidItemSelected(item)"/>
-        <input [(ngModel)]="item.quantity"/>
+        Quantity: <input [(ngModel)]="item.quantity"/>
         @if (!item.valid) {
             <p class="error-message">This isn't a valid item</p>
         }
