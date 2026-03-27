@@ -1,0 +1,27 @@
+<mat-dialog-content>
+    <div>
+        <label for="itemName">Name:</label>
+        <input name="itemName" type="text" [(ngModel)]="item.name"/>
+    </div>
+    <div>
+        <label for="itemQuantity">Quantity:</label>
+        <input name="itemQuantity" type="text" [(ngModel)]="item.quantity"/>
+    </div>
+    <div>
+        <label for="itemMinQuantity">Minimum Quantity:</label>
+        <input name="itemMinQuantity" type="text" [(ngModel)]="item.minQuantity"/>
+    </div>
+    <div>
+        <label for="itemCategory">Category:</label>
+        <input name="itemCategory" type="text" [(ngModel)]="item.category"/>
+    </div>
+    <div>
+        <label for="itemExpiry">Expiry Date (optional):</label>
+        <input matInput name="itemExpiry" [(ngModel)]="item.expiry" [matDatepicker]="picker">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </div>
+    <button (click)="cancel()">Cancel</button>
+    <button (click)="save()">Save</button>
+</mat-dialog-content>

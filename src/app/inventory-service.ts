@@ -70,6 +70,34 @@ export class InventoryService {
     return [...this.getAllInventory()].find(item => item.name === term);
   }
 
+  public createItem(item: InventoryItem) {
+    this._createOrUpdateItem(item);
+    this.syncLocalStorage();
+  }
+
+  public editItem(updatedItem: InventoryItem) {
+    this._createOrUpdateItem(updatedItem);
+    this.syncLocalStorage();
+  }
+
+  private _createOrUpdateItem(item: InventoryItem) {
+    this.inventory.set(item.id, item);
+  }
+
+  public deleteItem(itemId: string) {
+    this._deleteItem(itemId);
+    this.syncLocalStorage();
+  }
+  
+  public deleteItems(itemIds: string[]) {
+    itemIds.forEach(itemId => this._deleteItem(itemId));
+    this.syncLocalStorage();
+  }
+
+  private _deleteItem(itemId: string) {
+    this.inventory.delete(itemId);
+  }
+
   public removeItems(itemsToRemove: InventoryQuantityKey[]) {
     itemsToRemove.forEach((item) => this._removeItem(item.id, item.quantity));
     this.syncLocalStorage();
