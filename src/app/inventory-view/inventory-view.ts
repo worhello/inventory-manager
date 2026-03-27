@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { InventoryService } from '../inventory-service';
 import { InventoryItem } from '../shared/models/model';
-import { InventoryItemEdit } from '../shared/inventory-item-edit/inventory-item-edit';
 import { InventoryItemEditTrigger } from '../shared/inventory-item-edit-trigger';
 
 @Component({
@@ -10,15 +9,14 @@ import { InventoryItemEditTrigger } from '../shared/inventory-item-edit-trigger'
   imports: [],
   templateUrl: './inventory-view.html',
   styleUrl: './inventory-view.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InventoryView {
+  inventoryService = inject(InventoryService);
+  private cdRef = inject(ChangeDetectorRef);
 
   dialog = inject(MatDialog);
   inventoryItemEditTrigger = inject(InventoryItemEditTrigger);
-
-  constructor(public inventoryService: InventoryService, private cdRef: ChangeDetectorRef) {
-  }
 
   editItem(item: InventoryItem) {
     this.openInventoryItemEdit(item);

@@ -8,11 +8,14 @@ import { InventoryService } from '../inventory-service';
   providedIn: 'root',
 })
 export class InventoryItemEditTrigger {
+  private inventoryService = inject(InventoryService);
+
   dialog = inject(MatDialog);
 
-  constructor(private inventoryService: InventoryService) {}
-
-   public openInventoryItemEdit(itemToEdit: InventoryItem | undefined, itemCreatedFunc: (item: InventoryItem) => void) {
+  public openInventoryItemEdit(
+    itemToEdit: InventoryItem | undefined,
+    itemCreatedFunc: (item: InventoryItem) => void,
+  ) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
@@ -20,8 +23,8 @@ export class InventoryItemEditTrigger {
       dialogConfig.data = itemToEdit;
     }
 
-    let dialogRef = this.dialog.open(InventoryItemEdit, dialogConfig);
-    dialogRef.afterClosed().subscribe(result => {
+    const dialogRef = this.dialog.open(InventoryItemEdit, dialogConfig);
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         if (itemToEdit) {
           this.inventoryService.editItem(result);

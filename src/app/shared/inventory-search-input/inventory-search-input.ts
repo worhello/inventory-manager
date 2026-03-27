@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, output, inject } from '@angular/core';
 import { InventoryItem } from '../models/model';
 import { InventoryService } from '../../inventory-service';
 
@@ -9,13 +9,10 @@ import { InventoryService } from '../../inventory-service';
   styleUrl: './inventory-search-input.css',
 })
 export class InventorySearchInput {
+  inventoryService = inject(InventoryService);
+
   inventoryItemSelected = output<InventoryItem>();
   newInventoryItemSelected = output<string>();
-
-
-  constructor(public inventoryService: InventoryService) {
-    // TODO
-  }
 
   onInventoryItemSelected(itemName: string) {
     const inventoryItem = this.inventoryService.searchByName(itemName);

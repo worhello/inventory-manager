@@ -1,15 +1,14 @@
-
 @for (item of inventoryService.getAllInventory(); track $index) {
-    <div class="item-wrapper">
-        <p>{{item.name}}</p>
-        <p>{{item.category}}</p>
-        <p>Current Quantity: {{item.quantity}} / Minimum Quantity: {{item.minQuantity}}</p>
-        @if (item.expiry) {
-            <p>Expiry Date: {{item.expiry.toLocaleDateString()}}</p>
-        }
-        <input type="button" value="Edit" (click)="editItem(item)">
-        <input type="button" value="Delete" (click)="deleteItem(item)">
-    </div>
+  <div class="item-wrapper">
+    <p>{{ item.name }}</p>
+    <p>{{ item.category }}</p>
+    <p>Current Quantity: {{ item.quantity }} / Minimum Quantity: {{ item.minQuantity }}</p>
+    @if (item.expiry) {
+      <p>Expiry Date: {{ item.expiry.toLocaleDateString() }}</p>
+    }
+    <input type="button" value="Edit" (click)="editItem(item)" />
+    <input type="button" value="Delete" (click)="deleteItem(item)" />
+  </div>
 }
 
-<input type="button" value="Add new item" (click)="addNewItem()">
+<input type="button" value="Add new item" (click)="addNewItem()" />

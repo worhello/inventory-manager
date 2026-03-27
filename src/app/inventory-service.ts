@@ -6,39 +6,38 @@ import { v4 as uuid } from 'uuid';
   providedIn: 'root',
 })
 export class InventoryService {
-
-  inventory: Map<string, InventoryItem> = new Map();
+  inventory: Map<string, InventoryItem> = new Map<string, InventoryItem>();
   categories: string[] = [];
 
   constructor() {
     this.readLocalStorage();
   }
-  
+
   private syncLocalStorage() {
     localStorage.setItem('inventory', JSON.stringify(Array.from(this.inventory)));
     localStorage.setItem('categories', JSON.stringify(Array.from(this.categories)));
-    
+
     this.readLocalStorage();
   }
 
   private readLocalStorage() {
-    let inventoryFromStorage = localStorage.getItem('inventory');
+    const inventoryFromStorage = localStorage.getItem('inventory');
     if (inventoryFromStorage) {
       this.inventory = new Map(JSON.parse(inventoryFromStorage));
     }
 
-    let categoriesFromStorage = localStorage.getItem('categories');
+    const categoriesFromStorage = localStorage.getItem('categories');
     if (categoriesFromStorage) {
       this.categories = new Array(JSON.parse(categoriesFromStorage));
     }
   }
-  
+
   public getAllInventory(): Iterable<InventoryItem> {
     return this.inventory.values();
   }
 
   public searchByName(term: string): InventoryItem | undefined {
-    return [...this.getAllInventory()].find(item => item.name === term);
+    return [...this.getAllInventory()].find((item) => item.name === term);
   }
 
   public createItem(item: InventoryItem) {
@@ -60,9 +59,9 @@ export class InventoryService {
     this._deleteItem(itemId);
     this.syncLocalStorage();
   }
-  
+
   public deleteItems(itemIds: string[]) {
-    itemIds.forEach(itemId => this._deleteItem(itemId));
+    itemIds.forEach((itemId) => this._deleteItem(itemId));
     this.syncLocalStorage();
   }
 
@@ -81,13 +80,11 @@ export class InventoryService {
   }
 
   private _removeItem(id: string, quantityToRemove: number) {
-    let item = this.inventory.get(id);
+    const item = this.inventory.get(id);
     if (!item) {
       return;
     }
 
     item.quantity = Math.max(item.quantity - quantityToRemove, 0);
   }
-
-
 }

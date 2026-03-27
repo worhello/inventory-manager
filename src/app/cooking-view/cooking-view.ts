@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
-import { InventorySearchInput } from "../shared/inventory-search-input/inventory-search-input";
+import { Component, inject } from '@angular/core';
+import { InventorySearchInput } from '../shared/inventory-search-input/inventory-search-input';
 import { InventoryItem } from '../shared/models/model';
 import { FormsModule } from '@angular/forms';
 import { InventoryService } from '../inventory-service';
 
 class RemovedItem {
-  id = "";
+  id = '';
   quantity = 0;
-  name = "";
+  name = '';
   valid = true;
 
   isEmpty() {
-    return this.id === "";
+    return this.id === '';
   }
 }
 
@@ -22,9 +22,11 @@ class RemovedItem {
   styleUrl: './cooking-view.css',
 })
 export class CookingView {
+  private inventoryService = inject(InventoryService);
+
   itemsToBeRemoved: RemovedItem[] = [];
 
-  constructor(private inventoryService: InventoryService) {
+  constructor() {
     this.resetItemsToBeRemoved();
   }
 

@@ -1,13 +1,13 @@
 <h2>Shopping List</h2>
 
 @for (item of inventoryService.getAllInventory(); track $index) {
-    @if (item.quantity < item.minQuantity) {
-        <div>
-            <p>{{item.category}} - {{item.name}}</p>
-            <p># Required: {{item.minQuantity - item.quantity}}</p>
-            <input type="checkbox" [checked]="item.checked" (change)="onItemChecked(item)">
-        </div>
-    }
+  @if (item.quantity < item.minQuantity) {
+    <div>
+      <p>{{ item.category }} - {{ item.name }}</p>
+      <p># Required: {{ item.minQuantity - item.quantity }}</p>
+      <input type="checkbox" [checked]="item.checked" (change)="onItemChecked(item)" />
+    </div>
+  }
 }
 
-<input type="button" value="Add new item" (click)="addNewItem()">
+<input type="button" value="Add new item" (click)="addNewItem()" />
