@@ -10,7 +10,7 @@
         />
         <mat-form-field>
           <mat-label>Quantity</mat-label>
-          <input matInput [(ngModel)]="item.quantity">
+          <input matInput type="number" min="1" [(ngModel)]="item.quantity">
         </mat-form-field>
       </div>
       @if (!item.valid) {

@@ -34,7 +34,7 @@
       <td mat-cell *matCellDef="let element">
         <mat-form-field>
           <mat-label>Quantity To Buy</mat-label>
-          <input matInput type="number" [value]="element.quantityToBuy" (change)="onQuantityToBuyChanged($event.target.value, element)">
+          <input matInput type="number" min="1" [value]="element.quantityToBuy" (change)="onQuantityToBuyChanged($event.target.value, element)">
         </mat-form-field>
       </td>
     </ng-container>
