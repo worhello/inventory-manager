@@ -9,8 +9,8 @@
     "test": "ng test",
     "ghdeploy": "ng deploy --base-href=\"https://worhello.github.io/inventory-manager/\"",
     "format:fix": "pretty-quick --staged",
-    "precommit": "run-s format:fix lint",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "precommit": "run-s format:fix lint"
   },
   "private": false,
   "packageManager": "npm@11.12.1",
