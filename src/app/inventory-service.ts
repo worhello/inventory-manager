@@ -41,6 +41,11 @@ export class InventoryService {
         item.quantityToBuy = quantityToBuy;
         allValuesValid = false;
       }
+
+      if (item.expiry && typeof item.expiry === 'string') {
+        // it gets stored as a string, we need to parse it back to an object
+        item.expiry = new Date(item.expiry);
+      }
       
       categoriesSet.add(item.category);
       if (this.categories.indexOf(item.category) < 0) {
