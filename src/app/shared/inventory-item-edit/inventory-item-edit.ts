@@ -18,9 +18,16 @@ import { MatButtonModule } from '@angular/material/button';
     provideNativeDateAdapter(),
     { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
   ],
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatDialogModule, MatButtonModule],
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatButtonModule,
+  ],
   templateUrl: './inventory-item-edit.html',
-  styleUrl: './inventory-item-edit.css',
+  styleUrl: './inventory-item-edit.scss',
 })
 export class InventoryItemEdit {
   private dialogRef = inject<MatDialogRef<InventoryItemEdit>>(MatDialogRef);
@@ -32,11 +39,11 @@ export class InventoryItemEdit {
     const data = inject<InventoryItem | undefined>(MAT_DIALOG_DATA);
 
     if (data) {
-      this.item = structuredClone(data)  
-      this.title="Edit Inventory Item"
+      this.item = structuredClone(data);
+      this.title = 'Edit Inventory Item';
     } else {
       this.item = { id: '', quantity: 0, name: '', minQuantity: 0, category: '' };
-      this.title="Create Inventory Item"
+      this.title = 'Create Inventory Item';
     }
   }
 

@@ -11,7 +11,7 @@ import { first } from 'rxjs';
   selector: 'app-inventory-search-input',
   imports: [AsyncPipe, FormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './inventory-search-input.html',
-  styleUrl: './inventory-search-input.css',
+  styleUrl: './inventory-search-input.scss',
 })
 export class InventorySearchInput {
   inventoryService = inject(InventoryService);
@@ -24,12 +24,15 @@ export class InventorySearchInput {
   onInventoryItemSelected(itemName: string) {
     this.input.nativeElement.blur();
 
-    this.inventoryService.searchByName(itemName).pipe(first()).subscribe((inventoryItem: InventoryItem | undefined) => {
-      if (inventoryItem) {
-        this.inventoryItemSelected.emit(inventoryItem);
-      } else {
-        this.newInventoryItemSelected.emit(itemName);
-      }
-    });
+    this.inventoryService
+      .searchByName(itemName)
+      .pipe(first())
+      .subscribe((inventoryItem: InventoryItem | undefined) => {
+        if (inventoryItem) {
+          this.inventoryItemSelected.emit(inventoryItem);
+        } else {
+          this.newInventoryItemSelected.emit(itemName);
+        }
+      });
   }
 }

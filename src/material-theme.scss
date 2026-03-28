@@ -30,10 +30,9 @@ body {
   // Angular Material's system-level CSS variables. Learn more about these
   // variables at https://material.angular.dev/guide/system-variables
   background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  color: var(--mat-sys-on-surface); 
   font: var(--mat-sys-body-medium);
 
-  // Reset the user agent margin.
   margin: 0;
   height: 100%;
 }

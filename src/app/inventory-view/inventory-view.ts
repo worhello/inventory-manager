@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
   selector: 'app-inventory-view',
   imports: [AsyncPipe, MatButtonModule, MatCardModule, MatExpansionModule],
   templateUrl: './inventory-view.html',
-  styleUrl: './inventory-view.css',
+  styleUrl: './inventory-view.scss',
 })
 export class InventoryView {
   inventoryService = inject(InventoryService);

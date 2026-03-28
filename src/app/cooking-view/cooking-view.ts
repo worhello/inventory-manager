@@ -21,7 +21,7 @@ class RemovedItem {
   selector: 'app-cooking-view',
   imports: [FormsModule, InventorySearchInput, MatButtonModule, MatInputModule],
   templateUrl: './cooking-view.html',
-  styleUrl: './cooking-view.css',
+  styleUrl: './cooking-view.scss',
 })
 export class CookingView {
   private inventoryService = inject(InventoryService);

@@ -13,7 +13,7 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } fro
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
-  styleUrl: './navigation.component.css',
+  styleUrl: './navigation.component.scss',
   imports: [
     MatToolbarModule,
     MatButtonModule,

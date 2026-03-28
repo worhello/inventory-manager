@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { NavigationComponent } from "./navigation/navigation.component";
+import { NavigationComponent } from './navigation/navigation.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-root',
-  imports: [NavigationComponent],
+  imports: [MatDividerModule, NavigationComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  styleUrl: './app.scss',
 })
 export class App {
   protected readonly title = signal('Inventory Manager');
