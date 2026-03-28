@@ -25,8 +25,8 @@ export class InventoryService {
   private validateAllValues(items: Iterable<InventoryItem>): boolean {
     let allValuesValid = true;
 
-    for (let item of items) {
-      let quantityToBuy = this.getQuantityToBuy(item);
+    for (const item of items) {
+      const quantityToBuy = this.getQuantityToBuy(item);
       if (quantityToBuy > 0 && quantityToBuy !== item.quantityToBuy) {
         item.quantityToBuy = quantityToBuy;
         allValuesValid = false;

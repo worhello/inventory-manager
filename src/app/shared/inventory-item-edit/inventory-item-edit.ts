@@ -10,7 +10,6 @@ import {
   provideNativeDateAdapter,
 } from '@angular/material/core';
 import { InventoryItem } from '../models/model';
-import { InventoryService } from '../../inventory-service';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
