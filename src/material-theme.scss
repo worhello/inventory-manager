@@ -17,6 +17,7 @@ html {
       density: 0,
     )
   );
+  @include mat.system-classes();
 }
 
 body {
@@ -35,4 +36,8 @@ body {
   // Reset the user agent margin.
   margin: 0;
   height: 100%;
+}
+
+body.dark-mode {
+  color-scheme: dark;
 }
