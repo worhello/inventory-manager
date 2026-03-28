@@ -12,10 +12,7 @@ export class InventoryItemEditTrigger {
 
   dialog = inject(MatDialog);
 
-  public openInventoryItemEdit(
-    itemToEdit: InventoryItem | undefined,
-    itemCreatedFunc: (item: InventoryItem) => void,
-  ) {
+  public openInventoryItemEdit(itemToEdit?: InventoryItem) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
@@ -31,8 +28,6 @@ export class InventoryItemEditTrigger {
         } else {
           this.inventoryService.createItem(result);
         }
-
-        itemCreatedFunc(result);
       }
     });
   }

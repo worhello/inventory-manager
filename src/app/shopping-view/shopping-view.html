@@ -6,10 +6,6 @@
 
   <table mat-table [dataSource]="getShoppingBasket()" class="mat-elevation-z8">
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-
-    <!-- Position Column -->
     <ng-container matColumnDef="checked">
       <th mat-header-cell *matHeaderCellDef>Checked</th>
       <td mat-cell *matCellDef="let element">
@@ -22,13 +18,11 @@
       <td mat-cell *matCellDef="let element"> {{element.category}} </td>
     </ng-container>
 
-    <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
 
-    <!-- Symbol Column -->
     <ng-container matColumnDef="quantityToBuy">
       <th mat-header-cell *matHeaderCellDef>Quantity To Buy</th>
       <td mat-cell *matCellDef="let element">

@@ -9,7 +9,7 @@
     (change)="onInventoryItemSelected($event.target.value)"
   >
   <datalist id="inventory-items">
-    @for (item of inventoryService.getAllInventory(); track $index) {
+    @for (item of inventoryService.inventory$ | async; track $index) {
       <option value="{{ item.name }}"></option>
     }
   </datalist>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { InventoryService } from '../inventory-service';
 import { FormsModule } from '@angular/forms';
 import { InventoryItem } from '../shared/models/model';
@@ -10,23 +10,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
+import { first, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-shopping-view',
   imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatCheckboxModule, FormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatDialogModule, MatButtonModule, MatTableModule],
   templateUrl: './shopping-view.html',
-  styleUrl: './shopping-view.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './shopping-view.css'
 })
 export class ShoppingView {
   inventoryService = inject(InventoryService);
   private inventoryItemEditTrigger = inject(InventoryItemEditTrigger);
-  private cdRef = inject(ChangeDetectorRef);
 
   displayedColumns: string[] = ['checked', 'category', 'name', 'quantityToBuy'];
 
-  getShoppingBasket() {
-    return [...this.inventoryService.getAllInventory()].filter(item => item.quantity < item.minQuantity);
+  getShoppingBasket(): Observable<InventoryItem[]> {
+    return this.inventoryService.getInventoryWithFilter(item => item.quantity < item.minQuantity);
   }
 
   onItemChecked(item: InventoryItem) {
@@ -41,19 +40,19 @@ export class ShoppingView {
   }
 
   addNewItem() {
-    this.inventoryItemEditTrigger.openInventoryItemEdit(undefined, () => {
-      this.cdRef.markForCheck();
-    });
+    this.inventoryItemEditTrigger.openInventoryItemEdit();
   }
 
   updateInventory() {
-    const boughtItems = this.getShoppingBasket().filter(item => item.checked && item.quantityToBuy);
-    boughtItems.forEach(item => {
-      item.checked = false;
-      item.quantity = Number(item.quantity) + item.quantityToBuy!;
-      item.quantityToBuy = 0;
+    this.inventoryService.getInventoryWithFilter(item => item.quantity < item.minQuantity && !!item.checked && !!item.quantityToBuy)
+      .pipe(first())
+      .subscribe((boughtItems: InventoryItem[]) => {
+        boughtItems.forEach(item => {
+          item.checked = false;
+          item.quantity = Number(item.quantity) + item.quantityToBuy!;
+          item.quantityToBuy = 0;
+        });
+        this.inventoryService.updateItems(boughtItems);
     });
-
-    this.inventoryService.updateItems(boughtItems);
   }
 }

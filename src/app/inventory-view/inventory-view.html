@@ -5,12 +5,12 @@
 
   <div class="responsive-container">
     <mat-accordion>
-      @for (category of inventoryService.getCategories(); track $index) {
+      @for (category of categories$ | async; track category) {
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>{{category}}</mat-panel-title>
           </mat-expansion-panel-header>
-          @for (item of inventoryService.getInventoryByCategory(category); track $index) {
+          @for (item of inventoryService.getInventoryWithFilter((item) => item.category === category) | async; track item.id) {
             <mat-card appearance="outlined">
               <mat-card-header>
                 <mat-card-title>{{item.name}}</mat-card-title>
@@ -35,3 +35,6 @@
     </mat-accordion>
   </div>
 </div>
+<footer>
+  <button matButton (click)="resetInventory()">Reset Inventory</button>
+</footer>

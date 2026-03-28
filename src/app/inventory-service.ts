@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { InventoryItem, InventoryQuantityKey } from './shared/models/model';
 import { v4 as uuid } from 'uuid';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,12 @@ import { v4 as uuid } from 'uuid';
 export class InventoryService {
   inventory: Map<string, InventoryItem> = new Map<string, InventoryItem>();
   categories: string[] = [];
+
+  private inventorySource = new BehaviorSubject<InventoryItem[]>([]);
+  inventory$: Observable<InventoryItem[]> = this.inventorySource.asObservable();
+
+  private categoriesSource = new BehaviorSubject<string[]>([]);
+  categories$: Observable<string[]> = this.categoriesSource.asObservable();
 
   constructor() {
     this.readAndValidateLocalStorage();
@@ -18,8 +25,9 @@ export class InventoryService {
 
     if (!this.validateAllValues(this.inventory.values())) {
       this.syncLocalStorage();
+    } else {
+      this.updateObservers();
     }
-
   }
 
   private validateAllValues(items: Iterable<InventoryItem>): boolean {
@@ -80,24 +88,21 @@ export class InventoryService {
     localStorage.setItem('inventory', JSON.stringify(Array.from(this.inventory)));
     localStorage.setItem('categories', JSON.stringify(Array.from(this.categories)));
 
-    this.readLocalStorage();
+    this.updateObservers();
   }
 
-  public getAllInventory(): Iterable<InventoryItem> {
-    // return [...this.inventory.values()];//.sort((a, b) => this.categories.indexOf(a.category) - this.categories.indexOf(b.category));
-    return this.inventory.values();
+  public getInventoryWithFilter(filterFunc: (item: InventoryItem) => boolean): Observable<InventoryItem[]> {
+    return this.inventory$
+      .pipe(
+        map((items: InventoryItem[]) => items.filter(filterFunc))
+      );
   }
 
-  public getCategories(): string[] {
-    return this.categories;
-  }
-
-  public getInventoryByCategory(category: string) {
-    return [...this.inventory.values()].filter(item => item.category === category);
-  }
-
-  public searchByName(term: string): InventoryItem | undefined {
-    return [...this.getAllInventory()].find((item) => item.name === term);
+  public searchByName(term: string): Observable<InventoryItem | undefined> {
+    return this.inventory$
+      .pipe(
+        map((items: InventoryItem[]) => items.find(item => item.name === term))
+      );
   }
 
   public createItem(item: InventoryItem) {
@@ -112,12 +117,16 @@ export class InventoryService {
   }
   
   public updateItems(updatedItems: InventoryItem[]) {
-    updatedItems.forEach(this._createOrUpdateItem);
+    updatedItems.forEach((item: InventoryItem) => this._createOrUpdateItem(item));
     this.syncLocalStorage();
   }
 
   private _createOrUpdateItem(item: InventoryItem) {
-    this.updateQuantityToBuy(item.id);
+    this.updateQuantityToBuy(item);
+
+    if (this.categories.indexOf(item.category) < 0) {
+      this.categories.push(item.category);
+    }
 
     this.inventory.set(item.id, item);
   }
@@ -134,6 +143,8 @@ export class InventoryService {
 
   private _deleteItem(itemId: string) {
     this.inventory.delete(itemId);
+
+    // TODO - recalculate categories to remove them dynamically instead of just on load
   }
 
   public removeItems(itemsToRemove: InventoryQuantityKey[]) {
@@ -153,15 +164,23 @@ export class InventoryService {
     }
 
     item.quantity = Math.max(item.quantity - quantityToRemove, 0);
-    this.updateQuantityToBuy(id);
+    this.updateQuantityToBuy(item);
   }
 
-  private updateQuantityToBuy(id: string) {
-    const item = this.inventory.get(id);
-    if (!item) {
-      return;
-    }
-
+  private updateQuantityToBuy(item: InventoryItem) {
     item.quantityToBuy = this.getQuantityToBuy(item);
+  }
+
+  private updateObservers() {
+    this.inventorySource.next([...this.inventory.values()]);
+    this.categoriesSource.next(this.categories);
+  }
+
+  public resetInventory() {
+    localStorage.setItem('inventory', "");
+    localStorage.setItem('categories', "");
+
+    this.inventory = new Map();
+    this.categories.length = 0;
   }
 }
