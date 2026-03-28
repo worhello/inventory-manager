@@ -1,5 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -11,6 +17,8 @@ import {
 } from '@angular/material/core';
 import { InventoryItem } from '../models/model';
 import { MatButtonModule } from '@angular/material/button';
+import { InventoryService } from '../../inventory-service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-inventory-item-edit',
@@ -19,21 +27,28 @@ import { MatButtonModule } from '@angular/material/button';
     { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
   ],
   imports: [
+    AsyncPipe,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
     MatDialogModule,
     MatButtonModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './inventory-item-edit.html',
   styleUrl: './inventory-item-edit.scss',
 })
 export class InventoryItemEdit {
   private dialogRef = inject<MatDialogRef<InventoryItemEdit>>(MatDialogRef);
+  inventoryService = inject(InventoryService);
+
+  @ViewChild('categoryInput') input: ElementRef = {} as ElementRef;
 
   item: InventoryItem;
   title: string;
+
+  form: FormGroup;
 
   constructor() {
     const data = inject<InventoryItem | undefined>(MAT_DIALOG_DATA);
@@ -45,10 +60,24 @@ export class InventoryItemEdit {
       this.item = { id: '', quantity: 0, name: '', minQuantity: 0, category: '' };
       this.title = 'Create Inventory Item';
     }
+
+    this.form = new FormGroup({
+      name: new FormControl(this.item.name, [Validators.required]),
+      quantity: new FormControl(this.item.quantity, [Validators.required]),
+      minQuantity: new FormControl(this.item.minQuantity, [Validators.required]),
+      category: new FormControl(this.item.category, [Validators.required]),
+      expiry: new FormControl(this.item.expiry, []),
+    });
+  }
+
+  onCategorySelected() {
+    this.input.nativeElement.blur();
   }
 
   save() {
-    this.dialogRef.close(this.item);
+    if (this.form.valid) {
+      this.dialogRef.close(this.form.value);
+    }
   }
 
   cancel() {
