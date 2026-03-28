@@ -5,10 +5,11 @@ import { InventoryService } from '../inventory-service';
 import { InventoryItem } from '../shared/models/model';
 import { InventoryItemEditTrigger } from '../shared/inventory-item-edit-trigger';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-inventory-view',
-  imports: [MatButtonModule, MatCardModule],
+  imports: [MatButtonModule, MatCardModule, MatExpansionModule],
   templateUrl: './inventory-view.html',
   styleUrl: './inventory-view.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

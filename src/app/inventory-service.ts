@@ -16,7 +16,7 @@ export class InventoryService {
   private readAndValidateLocalStorage() {
     this.readLocalStorage();
 
-    if (!this.validateAllValues(this.getAllInventory())) {
+    if (!this.validateAllValues(this.inventory.values())) {
       this.syncLocalStorage();
     }
 
@@ -25,12 +25,27 @@ export class InventoryService {
   private validateAllValues(items: Iterable<InventoryItem>): boolean {
     let allValuesValid = true;
 
+    const categoriesSet = new Set<string>();
     for (const item of items) {
       const quantityToBuy = this.getQuantityToBuy(item);
       if (quantityToBuy > 0 && quantityToBuy !== item.quantityToBuy) {
+        console.log(`allValuesInvalid - quantityToBuy incorrect: ${item.quantityToBuy} instead of ${quantityToBuy}`);
         item.quantityToBuy = quantityToBuy;
         allValuesValid = false;
       }
+      
+      categoriesSet.add(item.category);
+      if (this.categories.indexOf(item.category) < 0) {
+        console.log(`allValuesInvalid - missing category in cache: ${item.category}`);
+        this.categories.push(item.category);
+        allValuesValid = false;
+      }
+    }
+
+    if (categoriesSet.size !== this.categories.length) {
+      console.log(`allValuesInvalid - too many categories in cache: ${categoriesSet.size} vs ${this.categories.length}`);
+      this.categories = Array.from(categoriesSet);
+      allValuesValid = false;
     }
 
     return allValuesValid;
@@ -57,7 +72,7 @@ export class InventoryService {
 
     const categoriesFromStorage = localStorage.getItem('categories');
     if (categoriesFromStorage) {
-      this.categories = new Array(JSON.parse(categoriesFromStorage));
+      this.categories = JSON.parse(categoriesFromStorage);
     }
   }
 
@@ -69,7 +84,16 @@ export class InventoryService {
   }
 
   public getAllInventory(): Iterable<InventoryItem> {
+    // return [...this.inventory.values()];//.sort((a, b) => this.categories.indexOf(a.category) - this.categories.indexOf(b.category));
     return this.inventory.values();
+  }
+
+  public getCategories(): string[] {
+    return this.categories;
+  }
+
+  public getInventoryByCategory(category: string) {
+    return [...this.inventory.values()].filter(item => item.category === category);
   }
 
   public searchByName(term: string): InventoryItem | undefined {

@@ -4,26 +4,34 @@
   <button matButton="filled" (click)="addNewItem()">Add new item</button>
 
   <div class="responsive-container">
-    @for (item of inventoryService.getAllInventory(); track $index) {
-      <mat-card appearance="outlined">
-        <mat-card-header>
-          <mat-card-title>{{item.name}}</mat-card-title>
-          <mat-card-subtitle>{{item.category}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          Current: {{ item.quantity }}
-          <br>
-          Minimum: {{ item.minQuantity }}
-          @if (item.expiry) {
-            <br>
-            Expiry Date: {{ item.expiry.toLocaleDateString() }}
+    <mat-accordion>
+      @for (category of inventoryService.getCategories(); track $index) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{category}}</mat-panel-title>
+          </mat-expansion-panel-header>
+          @for (item of inventoryService.getInventoryByCategory(category); track $index) {
+            <mat-card appearance="outlined">
+              <mat-card-header>
+                <mat-card-title>{{item.name}}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                Current: {{ item.quantity }}
+                <br>
+                Minimum: {{ item.minQuantity }}
+                @if (item.expiry) {
+                  <br>
+                  Expiry Date: {{ item.expiry.toLocaleDateString() }}
+                }
+              </mat-card-content>
+              <mat-card-actions  align="end">
+                <button matButton (click)="editItem(item)">Edit</button>
+                <button matButton (click)="deleteItem(item)">Delete</button>
+              </mat-card-actions>
+            </mat-card>
           }
-        </mat-card-content>
-        <mat-card-actions  align="end">
-          <button matButton (click)="editItem(item)">Edit</button>
-          <button matButton (click)="deleteItem(item)">Delete</button>
-        </mat-card-actions>
-      </mat-card>
-    }
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
   </div>
 </div>
