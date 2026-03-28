@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { InventoryItem, InventoryQuantityKey } from './shared/models/model';
 import { v4 as uuid } from 'uuid';
 import { BehaviorSubject, map, Observable } from 'rxjs';
+import { InventoryItem, InventoryQuantityKey } from '../../models/model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InventoryService {
+  
   inventory: Map<string, InventoryItem> = new Map<string, InventoryItem>();
-  categories: string[] = [];
-
   private inventorySource = new BehaviorSubject<InventoryItem[]>([]);
   inventory$: Observable<InventoryItem[]> = this.inventorySource.asObservable();
-
+  
+  categories: string[] = [];
   private categoriesSource = new BehaviorSubject<string[]>([]);
   categories$: Observable<string[]> = this.categoriesSource.asObservable();
 
@@ -23,15 +23,26 @@ export class InventoryService {
   private readAndValidateLocalStorage() {
     this.readLocalStorage();
 
-    if (!this.validateAllValues(this.inventory.values())) {
+    if (!this.validateAllValues(this.inventory)) {
       this.syncLocalStorage();
     } else {
       this.updateObservers();
     }
   }
 
-  private validateAllValues(items: Iterable<InventoryItem>): boolean {
+  private validateAllValues(itemsMap: Map<string, InventoryItem>): boolean {
     let allValuesValid = true;
+
+    // const checkInvalidKey = (key: any) => {
+    //   if (itemsMap.get(key)) {
+    //     itemsMap.delete(key);
+    //     console.log(`Removing invalid key entries from the original map - ${key}`);
+    //     allValuesValid = false;
+    //   }
+    // }
+    // [null, undefined, "", '', 0].forEach(checkInvalidKey);
+
+    const items = itemsMap.values();
 
     const categoriesSet = new Set<string>();
     for (const item of items) {

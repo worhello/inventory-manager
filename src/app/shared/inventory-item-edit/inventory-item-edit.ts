@@ -17,8 +17,8 @@ import {
 } from '@angular/material/core';
 import { InventoryItem } from '../models/model';
 import { MatButtonModule } from '@angular/material/button';
-import { InventoryService } from '../../inventory-service';
 import { AsyncPipe } from '@angular/common';
+import { InventoryService } from '../services/inventory-service/inventory-service';
 
 @Component({
   selector: 'app-inventory-item-edit',
@@ -67,6 +67,10 @@ export class InventoryItemEdit {
       minQuantity: new FormControl(this.item.minQuantity, [Validators.required]),
       category: new FormControl(this.item.category, [Validators.required]),
       expiry: new FormControl(this.item.expiry, []),
+      // these fields are required to update the right items, but need to be hidden
+      id: new FormControl(this.item.id, []),
+      checked: new FormControl(this.item.checked, []),
+      quantityToBuy: new FormControl(this.item.quantityToBuy, []),
     });
   }
 

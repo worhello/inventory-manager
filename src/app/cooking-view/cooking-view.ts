@@ -2,9 +2,9 @@ import { Component, inject } from '@angular/core';
 import { InventorySearchInput } from '../shared/inventory-search-input/inventory-search-input';
 import { InventoryItem } from '../shared/models/model';
 import { FormsModule } from '@angular/forms';
-import { InventoryService } from '../inventory-service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { InventoryService } from '../shared/services/inventory-service/inventory-service';
 
 class RemovedItem {
   id = '';

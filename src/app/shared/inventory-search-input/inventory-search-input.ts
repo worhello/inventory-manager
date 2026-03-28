@@ -1,11 +1,11 @@
 import { Component, output, inject, ViewChild, ElementRef } from '@angular/core';
 import { InventoryItem } from '../models/model';
-import { InventoryService } from '../../inventory-service';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AsyncPipe } from '@angular/common';
 import { first } from 'rxjs';
+import { InventoryService } from '../services/inventory-service/inventory-service';
 
 @Component({
   selector: 'app-inventory-search-input',

@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { InventoryService } from '../inventory-service';
 import { InventoryItem } from '../shared/models/model';
 import { InventoryItemEditTrigger } from '../shared/inventory-item-edit-trigger';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
+import { InventoryService } from '../shared/services/inventory-service/inventory-service';
 
 @Component({
   selector: 'app-inventory-view',

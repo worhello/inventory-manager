@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { InventoryService } from '../inventory-service';
 import { FormsModule } from '@angular/forms';
 import { InventoryItem } from '../shared/models/model';
 import { InventoryItemEditTrigger } from '../shared/inventory-item-edit-trigger';
@@ -11,16 +10,23 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { first, Observable } from 'rxjs';
+import { InventoryService } from '../shared/services/inventory-service/inventory-service';
+import { CdkDropList, CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { ShoppingService } from '../shared/services/shopping-service';
 
 @Component({
   selector: 'app-shopping-view',
   imports: [
+    CdkDropList, 
+    CdkDrag, 
     FormsModule,
     MatButtonModule,
     MatFormFieldModule,
     MatCheckboxModule,
     FormsModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -32,12 +38,22 @@ import { first, Observable } from 'rxjs';
 })
 export class ShoppingView {
   inventoryService = inject(InventoryService);
+  shoppingService = inject(ShoppingService);
   private inventoryItemEditTrigger = inject(InventoryItemEditTrigger);
 
-  displayedColumns: string[] = ['checked', 'category', 'name', 'quantityToBuy'];
+  displayedColumns: string[] = ['checked', 'name', 'category', 'quantityToBuy'];
+
+  drop(event: CdkDragDrop<string>) {
+    this.shoppingService.moveItemInList(event.item.data.id, event.currentIndex);
+  }
 
   getShoppingBasket(): Observable<InventoryItem[]> {
-    return this.inventoryService.getInventoryWithFilter((item) => item.quantity < item.minQuantity);
+
+    this.shoppingService.shoppingListData$.subscribe(items => {
+      console.log(`called with ${items}`);
+    })
+
+    return this.shoppingService.shoppingListData$;
   }
 
   onItemChecked(item: InventoryItem) {

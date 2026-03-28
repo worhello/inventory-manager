@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { InventoryItem } from './models/model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { InventoryItemEdit } from './inventory-item-edit/inventory-item-edit';
-import { InventoryService } from '../inventory-service';
+import { InventoryService } from './services/inventory-service/inventory-service';
 
 @Injectable({
   providedIn: 'root',

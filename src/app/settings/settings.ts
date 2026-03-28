@@ -1,8 +1,8 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { InventoryService } from '../inventory-service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { InventoryService } from '../shared/services/inventory-service/inventory-service';
 
 @Component({
   selector: 'app-settings',
