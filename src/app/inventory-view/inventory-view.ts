@@ -47,10 +47,4 @@ export class InventoryView {
   getAmountNeeded(item: InventoryItem) {
     return Math.max(item.minQuantity - item.quantity, 0);
   }
-
-  resetInventory() {
-    if (window.confirm("Are you sure you want to reset your inventory? This action cannot be reversed, and you will need to put your entire inventory in again!!!")) {
-      this.inventoryService.resetInventory();
-    }
-  }
 }

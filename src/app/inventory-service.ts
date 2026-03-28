@@ -183,4 +183,11 @@ export class InventoryService {
     this.inventory = new Map();
     this.categories.length = 0;
   }
+
+  public exportInventory(): string {
+    return JSON.stringify({
+      inventory: structuredClone([...this.inventory.values()]),
+      categories: structuredClone(this.categories)
+    });
+  }
 }
