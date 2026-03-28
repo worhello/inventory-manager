@@ -9,4 +9,5 @@ export interface InventoryItem extends InventoryQuantityKey {
   category: string;
   expiry?: Date;
   checked?: boolean;
+  quantityToBuy?: number;
 }

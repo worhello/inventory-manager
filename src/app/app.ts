@@ -1,19 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { UserConfigService } from './user-config-service';
+import { Component, signal } from '@angular/core';
+import { NavigationComponent } from "./navigation/navigation.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [NavigationComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('inventory-manager');
-  private router = inject(Router);
-  private userConfigService = inject(UserConfigService);
-
-  constructor() {
-    this.router.navigate([this.userConfigService.getLastUsedRoute()]);
-  }
+  protected readonly title = signal('Inventory Manager');
 }

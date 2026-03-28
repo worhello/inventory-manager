@@ -11,6 +11,7 @@ import {
 } from '@angular/material/core';
 import { InventoryItem } from '../models/model';
 import { InventoryService } from '../../inventory-service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-inventory-item-edit',
@@ -18,22 +19,26 @@ import { InventoryService } from '../../inventory-service';
     provideNativeDateAdapter(),
     { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
   ],
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatDialogModule],
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatDialogModule, MatButtonModule],
   templateUrl: './inventory-item-edit.html',
   styleUrl: './inventory-item-edit.css',
 })
 export class InventoryItemEdit {
-  private inventoryService = inject(InventoryService);
   private dialogRef = inject<MatDialogRef<InventoryItemEdit>>(MatDialogRef);
 
   item: InventoryItem;
+  title: string;
 
   constructor() {
     const data = inject<InventoryItem | undefined>(MAT_DIALOG_DATA);
 
-    this.item = data
-      ? structuredClone(data)
-      : { id: '', quantity: 0, name: '', minQuantity: 0, category: '' };
+    if (data) {
+      this.item = structuredClone(data)  
+      this.title="Edit Inventory Item"
+    } else {
+      this.item = { id: '', quantity: 0, name: '', minQuantity: 0, category: '' };
+      this.title="Create Inventory Item"
+    }
   }
 
   save() {

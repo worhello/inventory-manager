@@ -1,0 +1,10 @@
+.cooking-item {
+    display: flex;
+    gap: 12px;
+}
+
+.cooking-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}

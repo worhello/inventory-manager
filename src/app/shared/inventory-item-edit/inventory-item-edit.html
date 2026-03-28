@@ -1,27 +1,32 @@
 <mat-dialog-content>
-  <div>
-    <label for="itemName">Name:</label>
-    <input name="itemName" type="text" [(ngModel)]="item.name" />
+  <h2>{{title}}</h2>
+  <div class="item-edit-container">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="item.name">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Quantity</mat-label>
+      <input matInput type="text" [(ngModel)]="item.quantity">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Minimum Quantity</mat-label>
+      <input matInput type="text" [(ngModel)]="item.minQuantity">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Category</mat-label>
+      <input matInput type="text" [(ngModel)]="item.category">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Expiry Date (optional):</mat-label>
+      <input matInput [(ngModel)]="item.expiry" [matDatepicker]="picker">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <div class="button-container">
+      <button matButton="filled" (click)="cancel()">Cancel</button>
+      <button matButton="filled" (click)="save()">Save</button>
+    </div>
   </div>
-  <div>
-    <label for="itemQuantity">Quantity:</label>
-    <input name="itemQuantity" type="text" [(ngModel)]="item.quantity" />
-  </div>
-  <div>
-    <label for="itemMinQuantity">Minimum Quantity:</label>
-    <input name="itemMinQuantity" type="text" [(ngModel)]="item.minQuantity" />
-  </div>
-  <div>
-    <label for="itemCategory">Category:</label>
-    <input name="itemCategory" type="text" [(ngModel)]="item.category" />
-  </div>
-  <div>
-    <label for="itemExpiry">Expiry Date (optional):</label>
-    <input matInput name="itemExpiry" [(ngModel)]="item.expiry" [matDatepicker]="picker" />
-    <mat-hint>MM/DD/YYYY</mat-hint>
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </div>
-  <button (click)="cancel()">Cancel</button>
-  <button (click)="save()">Save</button>
 </mat-dialog-content>

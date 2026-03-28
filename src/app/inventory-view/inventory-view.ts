@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { InventoryService } from '../inventory-service';
 import { InventoryItem } from '../shared/models/model';
 import { InventoryItemEditTrigger } from '../shared/inventory-item-edit-trigger';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-inventory-view',
-  imports: [],
+  imports: [MatButtonModule, MatCardModule],
   templateUrl: './inventory-view.html',
   styleUrl: './inventory-view.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,5 +37,9 @@ export class InventoryView {
     this.inventoryItemEditTrigger.openInventoryItemEdit(item, () => {
       this.cdRef.markForCheck();
     });
+  }
+
+  getAmountNeeded(item: InventoryItem) {
+    return Math.max(item.minQuantity - item.quantity, 0);
   }
 }

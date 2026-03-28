@@ -3,6 +3,8 @@ import { InventorySearchInput } from '../shared/inventory-search-input/inventory
 import { InventoryItem } from '../shared/models/model';
 import { FormsModule } from '@angular/forms';
 import { InventoryService } from '../inventory-service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 class RemovedItem {
   id = '';
@@ -17,7 +19,7 @@ class RemovedItem {
 
 @Component({
   selector: 'app-cooking-view',
-  imports: [FormsModule, InventorySearchInput],
+  imports: [FormsModule, InventorySearchInput, MatButtonModule, MatInputModule],
   templateUrl: './cooking-view.html',
   styleUrl: './cooking-view.css',
 })
@@ -45,9 +47,11 @@ export class CookingView {
 
   onSubmit() {
     this.inventoryService.removeItems(this.itemsToBeRemoved);
+    this.resetItemsToBeRemoved();
   }
 
   resetItemsToBeRemoved() {
+    this.itemsToBeRemoved.length = 0;
     this.itemsToBeRemoved = [new RemovedItem()];
   }
 }

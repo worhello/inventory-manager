@@ -1,16 +1,22 @@
-<h2>Remove items from the inventory</h2>
+<div class="page-body">
+  <h2>Remove items from the inventory</h2>
 
-@for (item of itemsToBeRemoved; track $index) {
-  <div>
-    <app-inventory-search-input
-      (inventoryItemSelected)="onInventoryItemSelected(item, $event)"
-      (newInventoryItemSelected)="onInvalidItemSelected(item)"
-    />
-    Quantity: <input [(ngModel)]="item.quantity" />
-    @if (!item.valid) {
-      <p class="error-message">This isn't a valid item</p>
+  <div class="cooking-items-container">
+    @for (item of itemsToBeRemoved; track $index) {
+      <div class="cooking-item">
+        <app-inventory-search-input
+          (inventoryItemSelected)="onInventoryItemSelected(item, $event)"
+          (newInventoryItemSelected)="onInvalidItemSelected(item)"
+        />
+        <mat-form-field>
+          <mat-label>Quantity</mat-label>
+          <input matInput [(ngModel)]="item.quantity">
+        </mat-form-field>
+      </div>
+      @if (!item.valid) {
+        <mat-error>This isn't a valid item</mat-error>
+      }
     }
   </div>
-}
-
-<input type="button" (click)="onSubmit()" value="Remove Items" />
+  <button matButton="filled" (click)="onSubmit()">Remove these items from inventory</button>
+</div>
