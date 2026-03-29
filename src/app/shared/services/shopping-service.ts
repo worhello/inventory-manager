@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, first, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { InventoryItem } from '../models/model';
 import { InventoryService } from './inventory-service/inventory-service';
 
@@ -31,7 +31,7 @@ export class ShoppingService {
     }
 
     this.shoppingBasketItems$.subscribe((items: InventoryItem[]) => {
-      let newList = this.updateShoppingList(this.shoppingListOrder, items.map(item => item.id));
+      const newList = this.updateShoppingList(this.shoppingListOrder, items.map(item => item.id));
       this.updateList(newList);
     });
 
@@ -42,8 +42,8 @@ export class ShoppingService {
   }
 
   private updateShoppingList(originalList: string[], shoppingListOrderFromStorage: string[]): string[] {
-    let result: string[] = [...originalList];
-    for (let item of shoppingListOrderFromStorage) {
+    const result: string[] = [...originalList];
+    for (const item of shoppingListOrderFromStorage) {
       if (item && result.indexOf(item) === -1) {
         result.push(item);
       }
@@ -62,7 +62,7 @@ export class ShoppingService {
   }
 
   public moveItemInList(itemId: string, newIndex: number) {
-    let oldIndex = this.shoppingListOrder.indexOf(itemId);
+    const oldIndex = this.shoppingListOrder.indexOf(itemId);
     if (oldIndex === -1) {
       console.log("missing shopping list item - " + itemId);
       return;
