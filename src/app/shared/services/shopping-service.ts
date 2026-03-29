@@ -27,17 +27,28 @@ export class ShoppingService {
 
     const shoppingListOrderFromStorage = localStorage.getItem('shoppingListOrder');
     if (shoppingListOrderFromStorage) {
-      this.updateList(JSON.parse(shoppingListOrderFromStorage));
-    } else {
-      this.shoppingBasketItems$.pipe(first()).subscribe((items: InventoryItem[]) => {
-        this.updateList(items.map(item => item.id));
-      });
+      this.shoppingListOrder = this.updateShoppingList([], JSON.parse(shoppingListOrderFromStorage));
     }
+
+    this.shoppingBasketItems$.subscribe((items: InventoryItem[]) => {
+      let newList = this.updateShoppingList(this.shoppingListOrder, items.map(item => item.id));
+      this.updateList(newList);
+    });
 
     this.shoppingListData$ = combineLatest([this.shoppingBasketItems$, this.shoppingListOrder$])
       .pipe(
          map(([items, sortOrder]) => (items.sort((a: InventoryItem, b: InventoryItem) => sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)))),
       );
+  }
+
+  private updateShoppingList(originalList: string[], shoppingListOrderFromStorage: string[]): string[] {
+    let result: string[] = [...originalList];
+    for (let item of shoppingListOrderFromStorage) {
+      if (item && result.indexOf(item) === -1) {
+        result.push(item);
+      }
+    }
+    return result;
   }
 
   notify() {
@@ -51,11 +62,17 @@ export class ShoppingService {
   }
 
   public moveItemInList(itemId: string, newIndex: number) {
-    const oldIndex = this.shoppingListOrder.indexOf(itemId);
-    const elem = this.shoppingListOrder[oldIndex];
-    this.shoppingListOrder.copyWithin(oldIndex, oldIndex + 1, newIndex + 1)[newIndex]=elem;
+    let oldIndex = this.shoppingListOrder.indexOf(itemId);
+    if (oldIndex === -1) {
+      console.log("missing shopping list item - " + itemId);
+      return;
+    }
 
-    this.updateList(this.shoppingListOrder);
+    const result = [...this.shoppingListOrder]; // copy array to avoid mutation
+    const [element] = result.splice(oldIndex, 1); // remove element at "from"
+    result.splice(newIndex, 0, element);      // insert element at "to"
+
+    this.updateList(result);
   }
 
   public exportShoppingList() {

@@ -48,16 +48,10 @@ export class ShoppingView {
   }
 
   getShoppingBasket(): Observable<InventoryItem[]> {
-
-    this.shoppingService.shoppingListData$.subscribe(items => {
-      console.log(`called with ${items}`);
-    })
-
     return this.shoppingService.shoppingListData$;
   }
 
   onItemChecked(item: InventoryItem) {
-    console.log(`quantityToBuy: ${item.quantityToBuy}`);
     item.checked = !item.checked;
     this.inventoryService.editItem(item);
   }
