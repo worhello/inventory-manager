@@ -57,4 +57,8 @@ export class ShoppingService {
 
     this.updateList(this.shoppingListOrder);
   }
+
+  public exportShoppingList() {
+    return this.shoppingListOrder;
+  }
 }

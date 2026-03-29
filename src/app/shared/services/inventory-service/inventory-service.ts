@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { InventoryItem, InventoryQuantityKey } from '../../models/model';
+import { InventoryExportData, InventoryItem, InventoryQuantityKey } from '../../models/model';
 
 @Injectable({
   providedIn: 'root',
@@ -200,10 +200,10 @@ export class InventoryService {
     this.categories.length = 0;
   }
 
-  public exportInventory(): string {
-    return JSON.stringify({
+  public exportInventory(): InventoryExportData {
+    return {
       inventory: structuredClone([...this.inventory.values()]),
       categories: structuredClone(this.categories)
-    });
+    };
   }
 }
