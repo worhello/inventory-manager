@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { filter, map, shareReplay, withLatestFrom } from 'rxjs/operators';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-navigation',
@@ -30,20 +31,44 @@ export class NavigationComponent {
   @ViewChild('drawer') drawer: MatSidenav = {} as MatSidenav;
 
   private breakpointObserver = inject(BreakpointObserver);
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map((result) => result.matches),
     shareReplay(),
   );
 
-  constructor() {
-    const router = inject(Router);
+  router = inject(Router);
+  titleService = inject(Title);
 
-    router.events
+  title = "";
+
+  constructor() {
+    this.router.events
       .pipe(
         withLatestFrom(this.isHandset$),
         filter(([a, b]) => b && a instanceof NavigationEnd),
       )
       .subscribe(() => this.drawer.close());
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.title = this.getTitle(this.router.routerState, this.router.routerState.root).join(' | ');
+        this.titleService.setTitle(this.title);
+      }
+    });
+  }
+
+  // TODO remove this
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  private getTitle(state: any, parent: any): string[] {
+    const data = [];
+    if (parent && parent.snapshot.data && parent.snapshot.data['title']) {
+      data.push(parent.snapshot.data['title']);
+    }
+
+    if (state && parent) {
+      data.push(...this.getTitle(state, state.firstChild(parent)));
+    }
+
+    return data;
   }
 }

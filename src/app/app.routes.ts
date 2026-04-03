@@ -6,8 +6,8 @@ import { Settings } from './settings/settings';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/inventory', pathMatch: 'full' },
-  { path: 'inventory', component: InventoryView },
-  { path: 'shopping', component: ShoppingView },
-  { path: 'cooking', component: CookingView },
-  { path: 'settings', component: Settings },
+  { path: 'inventory', component: InventoryView, data: {title: 'Inventory'} },
+  { path: 'shopping', component: ShoppingView, data: {title: 'Shopping'} },
+  { path: 'cooking', component: CookingView, data: {title: 'Cooking'} },
+  { path: 'settings', component: Settings, data: {title: 'Settings'} },
 ];
