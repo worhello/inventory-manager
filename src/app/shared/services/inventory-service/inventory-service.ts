@@ -213,7 +213,7 @@ export class InventoryService {
     // therefore we reset the DB first
     this.resetInventory();
 
-    const inventoryMap: Map<string, InventoryItem> = new Map();
+    const inventoryMap = new Map<string, InventoryItem>();
     inventoryItems.forEach(item => inventoryMap.set(item.id, item));
     localStorage.setItem('inventory', JSON.stringify(Array.from(inventoryMap)));
 

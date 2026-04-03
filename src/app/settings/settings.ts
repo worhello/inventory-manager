@@ -109,7 +109,7 @@ export class Settings {
       const items: InventoryItem[] = [];
 
       for (let i = 1; i < lines.length; i++) {
-        let line = lines[i];
+        const line = lines[i];
         if (line === "") { // last line will often be empty
           break;
         }
