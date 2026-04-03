@@ -207,4 +207,17 @@ export class InventoryService {
       categories: structuredClone(this.categories)
     };
   }
+
+  public importInventory(inventoryItems: InventoryItem[]) {
+    // this is highly destructive, only used when the user confirms they want to import a whole other DB
+    // therefore we reset the DB first
+    this.resetInventory();
+
+    const inventoryMap: Map<string, InventoryItem> = new Map();
+    inventoryItems.forEach(item => inventoryMap.set(item.id, item));
+    localStorage.setItem('inventory', JSON.stringify(Array.from(inventoryMap)));
+
+    // This then sets up the inventory and categories correctly
+    this.readAndValidateLocalStorage();
+  }
 }

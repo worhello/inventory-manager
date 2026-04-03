@@ -17,11 +17,16 @@ interface ExportData extends InventoryExportData {
   styleUrl: './settings.scss',
 })
 export class Settings {
+
+  readonly fileHeaderRow = ['id', 'name', 'category', 'quantity', 'minQuantity', 'expiry', 'checked', 'quantityToBuy'];
+
   inventoryService = inject(InventoryService);
   shoppingService = inject(ShoppingService);
 
   @ViewChild('inventoryTextBox') inventoryTextBox: ElementRef = {} as ElementRef;
   showInventoryInput = false;
+
+  @ViewChild('inventoryImportInput') inventoryImportInput: ElementRef = {} as ElementRef;
 
   resetInventory() {
     if (
@@ -40,10 +45,8 @@ export class Settings {
       return;
     }
     
-    const headerRow = ['id', 'name', 'category', 'quantity', 'minQuantity', 'expiry', 'checked', 'quantityToBuy'];
-    
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += headerRow.join(',') + '\n';
+    csvContent += this.fileHeaderRow.join(',') + '\n';
 
     exportedInventoryData.inventory.forEach((item) => {
       csvContent += this.inventoryItemToString(item) + '\n';
@@ -72,9 +75,65 @@ export class Settings {
     return fieldsArray.join(',');
   }
 
-  importInventoryFromCsv() {
-    window.alert('Not implemented yet...');
+  confirmInventoryImport() {
+    if (window.confirm("Importing a new Inventory will clear any Inventory currently stored in the browser. Are you sure you want to continue?")) {
+      this.inventoryImportInput.nativeElement.click();
+    }
   }
+
+  onFilesAdded(event: Event) {
+    const eventTarget = (event.target as HTMLInputElement);
+    if (!eventTarget || !eventTarget.files || eventTarget.files.length === 0) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (readerEvent: ProgressEvent<FileReader>) => this.handleFileRead(readerEvent);
+    reader.readAsDataURL(eventTarget.files[0]);
+  }
+
+  private handleFileRead(readerEvent: ProgressEvent<FileReader>) {
+      const content = (readerEvent.target?.result as string);
+      if (!content) {
+        return;
+      }
+
+      const dataB64 = content.replace("data:text/csv;base64,", "");
+      const decoded = atob(dataB64);
+
+      const lines = decoded.split('\n');
+      if (lines[0] != this.fileHeaderRow.join(',')) {
+        return;
+      }
+
+      const items: InventoryItem[] = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        let line = lines[i];
+        if (line === "") { // last line will often be empty
+          break;
+        }
+
+        // The order here is based on this.fileHeaderRow
+        const [id, name, category, quantity, minQuantity, expiry, checked, quantityToBuy] = line.split(',');
+
+        const item: InventoryItem = {
+          id,
+          name,
+          category,
+          quantity: parseInt(quantity),
+          minQuantity: parseInt(minQuantity),
+          ...(expiry ? { expiry: new Date(expiry) } : {}),
+          ...(checked ? { checked: !!(parseInt(checked) || checked === "true") } : {}),
+          ...(quantityToBuy ? { quantityToBuy: parseInt(quantityToBuy) } : {})
+        };
+        
+        items.push(item);
+      }
+
+      this.inventoryService.importInventory(items);
+      window.alert("Inventory was imported successfully!");
+    }
 
   exportInventoryMetadata() {
     const exportData: ExportData = {

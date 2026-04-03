@@ -1,7 +1,8 @@
 <div class="page-body">
     <button matButton="filled" (click)="resetInventory()">Reset Inventory</button>
     <button matButton="filled" (click)="exportInventoryToCsv()">Export Inventory to CSV</button>
-    <button matButton="filled" (click)="importInventoryFromCsv()">Import Inventory from CSV</button>
+    <button matButton="filled" (click)="confirmInventoryImport()">Import Inventory from CSV</button>
+    <input #inventoryImportInput type="file" accept=".csv" style="visibility: hidden; position: absolute;" (change)="onFilesAdded($event)">
 
     <button matButton="filled" (click)="exportInventoryMetadata()">Export Inventory Metadata</button>
 
