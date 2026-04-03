@@ -1,19 +1,53 @@
 
 <div class="page-body">
-  <h2>Manage your inventory</h2>
-  <button matButton="filled" (click)="addNewItem()">Add new item</button>
+  <!-- TODO add search input -->
 
-  <div class="responsive-container">
-    <mat-accordion>
+  <div>
+    <button matButton="filled" (click)="addNewItem()">
+      <mat-icon fontIcon="add"></mat-icon>
+      Add new item
+    </button>
+  </div>
+
+  <div>
+    <mat-accordion multi>
       @for (category of categories$ | async; track category) {
+        @let items = inventoryService.getInventoryWithFilter((item) => item.category === category) | async;
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>{{category}}</mat-panel-title>
+            <mat-panel-description>
+                @let understocked = (items || []).filter(item => item.quantity < item.minQuantity).length;
+                @if (understocked > 0) {
+                  <mat-icon class="understocked-icon" 
+                    #tooltip="matTooltip"
+                    matTooltip="{{understocked}} item(s) need to be restocked"
+                    fontIcon="dangerous">
+                  </mat-icon>
+                  <p>{{understocked}}</p>
+                }
+                @let expiringSoon = (items || []).filter(item => isExpiringSoon(item)).length;
+                @if(expiringSoon > 0) {
+                  <mat-icon class="expiring-soon-icon" 
+                    #tooltip="matTooltip"
+                    matTooltip="{{expiringSoon}} item(s) are expiring soon"
+                    fontIcon="warning">
+                  </mat-icon>
+                  <p>{{expiringSoon}}</p>
+                }
+            </mat-panel-description>
           </mat-expansion-panel-header>
-          @for (item of inventoryService.getInventoryWithFilter((item) => item.category === category) | async; track item.id) {
+          @for (item of items; track item.id) {
             <mat-card appearance="outlined">
               <mat-card-header>
                 <mat-card-title>{{item.name}}</mat-card-title>
+                @if (understocked > 0) {
+                  <mat-icon class="understocked-icon" 
+                    #tooltip="matTooltip"
+                    matTooltip="Needs to be restocked"
+                    fontIcon="dangerous">
+                  </mat-icon>
+                }
               </mat-card-header>
               <mat-card-content>
                 Current: {{ item.quantity }}
@@ -22,6 +56,13 @@
                 @if (item.expiry) {
                   <br>
                   Expiry Date: {{ item.expiry.toLocaleDateString() }}
+                  @if(isExpiringSoon(item)) {
+                    <mat-icon class="expiring-soon-icon" 
+                      #tooltip="matTooltip"
+                      matTooltip="Expires soon"
+                      fontIcon="warning">
+                    </mat-icon>
+                  }
                 }
               </mat-card-content>
               <mat-card-actions  align="end">

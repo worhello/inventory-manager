@@ -1,5 +1,26 @@
-.responsive-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 24px;
+
+@use '@angular/material' as mat;
+
+.understocked-icon {
+  @include mat.icon-overrides((
+    color: red,
+  ));
+}
+
+.expiring-soon-icon {
+  @include mat.icon-overrides((
+    color: orange,
+  ));
+}
+
+// label {
+//     border-radius: 15px;
+//     padding: 5px;
+//     display: flex;
+//     align-items: center;
+// }
+
+.mat-expansion-panel-header-description {
+  justify-content: end;
+  align-items: center;
 }
