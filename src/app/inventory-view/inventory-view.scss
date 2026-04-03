@@ -1,5 +1,15 @@
-
 @use '@angular/material' as mat;
+
+.actions-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.inventory-search-form-field {
+    width: 60vw;
+}
 
 .understocked-icon {
   @include mat.icon-overrides((
@@ -12,13 +22,6 @@
     color: orange,
   ));
 }
-
-// label {
-//     border-radius: 15px;
-//     padding: 5px;
-//     display: flex;
-//     align-items: center;
-// }
 
 .mat-expansion-panel-header-description {
   justify-content: end;

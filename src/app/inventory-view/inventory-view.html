@@ -1,77 +1,97 @@
 
 <div class="page-body">
-  <!-- TODO add search input -->
 
-  <div>
-    <button matButton="filled" (click)="addNewItem()">
-      <mat-icon fontIcon="add"></mat-icon>
-      Add new item
-    </button>
+  <div class="actions-container">
+    <div class="search-outer-div">
+      <mat-form-field class="inventory-search-form-field">
+        <mat-label>Search...</mat-label>
+        <input matInput type="text" #searchInput (input)="onSearchUpdated(searchInput.value)">
+          @if (searchInput.value !== '') {
+            <button matSuffix matIconButton aria-label="Clear" (click)="searchInput.value=''; onSearchUpdated('')">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+      </mat-form-field>
+    </div>
+    <div>
+      <button matButton="filled" (click)="addNewItem()">
+        <mat-icon fontIcon="add"></mat-icon>
+        Add new item
+      </button>
+    </div>
   </div>
 
   <div>
+    
+    @let searchValue = searchQuery$ | async;
+    @if (searchValue !== '') {
+      <p>Search Results for '{{searchValue}}'</p>
+    }
+
     <mat-accordion multi>
       @for (category of categories$ | async; track category) {
-        @let items = inventoryService.getInventoryWithFilter((item) => item.category === category) | async;
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{category}}</mat-panel-title>
-            <mat-panel-description>
-                @let understocked = (items || []).filter(item => item.quantity < item.minQuantity).length;
-                @if (understocked > 0) {
-                  <mat-icon class="understocked-icon" 
-                    #tooltip="matTooltip"
-                    matTooltip="{{understocked}} item(s) need to be restocked"
-                    fontIcon="dangerous">
-                  </mat-icon>
-                  <p>{{understocked}}</p>
-                }
-                @let expiringSoon = (items || []).filter(item => isExpiringSoon(item)).length;
-                @if(expiringSoon > 0) {
-                  <mat-icon class="expiring-soon-icon" 
-                    #tooltip="matTooltip"
-                    matTooltip="{{expiringSoon}} item(s) are expiring soon"
-                    fontIcon="warning">
-                  </mat-icon>
-                  <p>{{expiringSoon}}</p>
-                }
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          @for (item of items; track item.id) {
-            <mat-card appearance="outlined">
-              <mat-card-header>
-                <mat-card-title>{{item.name}}</mat-card-title>
-                @if (understocked > 0) {
-                  <mat-icon class="understocked-icon" 
-                    #tooltip="matTooltip"
-                    matTooltip="Needs to be restocked"
-                    fontIcon="dangerous">
-                  </mat-icon>
-                }
-              </mat-card-header>
-              <mat-card-content>
-                Current: {{ item.quantity }}
-                <br>
-                Minimum: {{ item.minQuantity }}
-                @if (item.expiry) {
-                  <br>
-                  Expiry Date: {{ item.expiry.toLocaleDateString() }}
-                  @if(isExpiringSoon(item)) {
+        @let items = getFilteredInventory(category) | async;
+        @if (items && items.length > 0) {
+          <mat-expansion-panel expanded="{{searchValue !== ''}}">
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{category}} ({{items.length}})</mat-panel-title>
+              <mat-panel-description>
+                  @let understocked = (items || []).filter(item => item.quantity < item.minQuantity).length;
+                  @if (understocked > 0) {
+                    <mat-icon class="understocked-icon" 
+                      #tooltip="matTooltip"
+                      matTooltip="{{understocked}} item(s) need to be restocked"
+                      fontIcon="dangerous">
+                    </mat-icon>
+                    <p>{{understocked}}</p>
+                  }
+                  @let expiringSoon = (items || []).filter(item => isExpiringSoon(item)).length;
+                  @if(expiringSoon > 0) {
                     <mat-icon class="expiring-soon-icon" 
                       #tooltip="matTooltip"
-                      matTooltip="Expires soon"
+                      matTooltip="{{expiringSoon}} item(s) are expiring soon"
                       fontIcon="warning">
                     </mat-icon>
+                    <p>{{expiringSoon}}</p>
                   }
-                }
-              </mat-card-content>
-              <mat-card-actions  align="end">
-                <button matButton (click)="editItem(item)">Edit</button>
-                <button matButton (click)="deleteItem(item)">Delete</button>
-              </mat-card-actions>
-            </mat-card>
-          }
-        </mat-expansion-panel>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            @for (item of items; track item.id) {
+              <mat-card appearance="outlined">
+                <mat-card-header>
+                  <mat-card-title>{{item.name}}</mat-card-title>
+                  @if (understocked > 0) {
+                    <mat-icon class="understocked-icon" 
+                      #tooltip="matTooltip"
+                      matTooltip="Needs to be restocked"
+                      fontIcon="dangerous">
+                    </mat-icon>
+                  }
+                </mat-card-header>
+                <mat-card-content>
+                  Current: {{ item.quantity }}
+                  <br>
+                  Minimum: {{ item.minQuantity }}
+                  @if (item.expiry) {
+                    <br>
+                    Expiry Date: {{ item.expiry.toLocaleDateString() }}
+                    @if(isExpiringSoon(item)) {
+                      <mat-icon class="expiring-soon-icon" 
+                        #tooltip="matTooltip"
+                        matTooltip="Expires soon"
+                        fontIcon="warning">
+                      </mat-icon>
+                    }
+                  }
+                </mat-card-content>
+                <mat-card-actions  align="end">
+                  <button matButton (click)="editItem(item)">Edit</button>
+                  <button matButton (click)="deleteItem(item)">Delete</button>
+                </mat-card-actions>
+              </mat-card>
+            }
+          </mat-expansion-panel>
+        }
       }
     </mat-accordion>
   </div>

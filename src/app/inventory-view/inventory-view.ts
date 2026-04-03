@@ -6,15 +6,17 @@ import { InventoryItemEditTrigger } from '../shared/inventory-item-edit-trigger'
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { InventoryService } from '../shared/services/inventory-service/inventory-service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-inventory-view',
-  imports: [AsyncPipe, MatButtonModule, MatCardModule, MatExpansionModule, MatIconModule, MatFormFieldModule, MatTooltipModule],
+  imports: [AsyncPipe, FormsModule, MatButtonModule, MatCardModule, MatExpansionModule, MatIconModule, MatInputModule, MatFormFieldModule, MatTooltipModule],
   templateUrl: './inventory-view.html',
   styleUrl: './inventory-view.scss',
 })
@@ -26,11 +28,13 @@ export class InventoryView {
   dialog = inject(MatDialog);
   inventoryItemEditTrigger = inject(InventoryItemEditTrigger);
 
-  inventory$: Observable<InventoryItem[]>;
+  filteredInventory$: Observable<InventoryItem[]>;
   categories$: Observable<string[]>;
 
+  searchQuery$ = new BehaviorSubject<string>('');
+
   constructor() {
-    this.inventory$ = this.inventoryService.inventory$;
+    this.filteredInventory$ = this.inventoryService.inventory$;
     this.categories$ = this.inventoryService.categories$;
   }
 
@@ -42,8 +46,19 @@ export class InventoryView {
     const expiryTime = item.expiry.getTime();
     const warningThreshold = new Date().getTime() + InventoryView.expiryWarningThresholdMs; // today + expiryWarningThresholdMs(3) days
     return expiryTime < warningThreshold;
-    // const today = new Date().getTime();
-    // return Math.round(Math.abs((today - item.expiry.getTime()))) >= InventoryView.expiryWarningThresholdMs;
+  }
+
+  onSearchUpdated(newValue: string) {
+    this.searchQuery$.next(newValue);
+  }
+
+  getFilteredInventory(category: string): Observable<InventoryItem[]> {
+    return combineLatest([
+      this.inventoryService.getInventoryWithFilter((item) => item.category === category),
+      this.searchQuery$])
+        .pipe(
+          map(([categoryInventory, searchQuery]) => categoryInventory.filter(item => item.name.includes(searchQuery)))
+        );
   }
 
   editItem(item: InventoryItem) {

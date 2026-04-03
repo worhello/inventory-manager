@@ -114,6 +114,7 @@ export class InventoryService {
       );
   }
 
+  // deprecated
   public searchByName(term: string): Observable<InventoryItem | undefined> {
     return this.inventory$
       .pipe(
