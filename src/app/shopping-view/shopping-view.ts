@@ -18,8 +18,8 @@ import { ShoppingService } from '../shared/services/shopping-service';
 @Component({
   selector: 'app-shopping-view',
   imports: [
-    CdkDropList, 
-    CdkDrag, 
+    CdkDropList,
+    CdkDrag,
     FormsModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -31,8 +31,8 @@ import { ShoppingService } from '../shared/services/shopping-service';
     MatDatepickerModule,
     MatDialogModule,
     MatButtonModule,
-    MatTableModule,
-  ],
+    MatTableModule
+],
   templateUrl: './shopping-view.html',
   styleUrl: './shopping-view.scss',
 })
@@ -41,7 +41,7 @@ export class ShoppingView {
   shoppingService = inject(ShoppingService);
   private inventoryItemEditTrigger = inject(InventoryItemEditTrigger);
 
-  displayedColumns: string[] = ['checked', 'name', 'category', 'quantityToBuy'];
+  displayedColumns: string[] = ['dragger', 'name', 'quantityToBuy', 'checked'];
 
   drop(event: CdkDragDrop<string>) {
     this.shoppingService.moveItemInList(event.item.data.id, event.currentIndex);

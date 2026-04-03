@@ -1,8 +1,44 @@
-.shopping-list-row {
-  display: flex;
+.shopping-table {
+  width: 100%;
 }
 
-.example-drag-cursor {
+.mat-column-name, .mat-column-quantityToBuy {
+  padding: 0px 12px 0px 12px;
+}
+
+.mat-column-dragger {
+  width: 12px;
+  padding: 0px;
+  padding-left: 4px;
+  text-align: center;
+}
+
+.mat-column-dragger mat-icon {
+  margin: 0px;
+  margin-left: 6px;
+}
+
+.mat-column-checked {
+  border-left: 1px solid currentColor;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+}
+
+.mat-column-checked mat-icon {
+  margin: 0px;
+}
+
+.mat-column-quantityToBuy {
+  align-items: center;
+  padding: 8px 12px 8px 12px;
+}
+
+.mat-column-quantityToBuy mat-form-field {
+  width: 80px;
+}
+
+.drag-cursor {
   margin-right: 16px;
   cursor: move;
 }
