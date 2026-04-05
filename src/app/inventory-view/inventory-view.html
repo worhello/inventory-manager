@@ -60,7 +60,7 @@
               <mat-card appearance="outlined">
                 <mat-card-header>
                   <mat-card-title>{{item.name}}</mat-card-title>
-                  @if (understocked > 0) {
+                  @if (item.quantity < item.minQuantity) {
                     <mat-icon class="understocked-icon" 
                       #tooltip="matTooltip"
                       matTooltip="Needs to be restocked"
