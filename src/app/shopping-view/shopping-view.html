@@ -43,9 +43,10 @@
   </table>
   
   <div>
-    <button matButton="filled" (click)="updateInventory()">
+    @let shoppingItems = shoppingService.shoppingListData$ | async;
+    <button [disabled]="!shoppingItems || shoppingItems.every(item => !item.checked)" matButton="filled" (click)="updateInventory()">
       <mat-icon fontIcon="check"></mat-icon>
-      Update Inventory
+      Add Checked Items to Inventory
     </button>
   </div>
 </div>

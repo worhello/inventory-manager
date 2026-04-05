@@ -14,10 +14,12 @@ import { InventoryService } from '../shared/services/inventory-service/inventory
 import { CdkDropList, CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { ShoppingService } from '../shared/services/shopping-service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-shopping-view',
   imports: [
+    AsyncPipe,
     CdkDropList,
     CdkDrag,
     FormsModule,
