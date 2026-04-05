@@ -23,6 +23,10 @@
   ));
 }
 
+.mat-expansion-panel-header-title {
+  min-width: 150px;
+}
+
 .mat-expansion-panel-header-description {
   justify-content: end;
   align-items: center;
