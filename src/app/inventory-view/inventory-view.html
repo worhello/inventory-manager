@@ -74,7 +74,10 @@
                   Minimum: {{ item.minQuantity }}
                   @if (item.expiry) {
                     <br>
-                    Expiry Date: {{ item.expiry.toLocaleDateString() }}
+                    Expiry Date: {{item.expiry.toLocaleDateString()}}
+                    @if (item.quantity <= 0) {
+                      <span matTooltip="Note: Expiry warning suppressed due to having a quantity of 0">*</span>
+                    }
                     @if(isExpiringSoon(item)) {
                       <mat-icon class="expiring-soon-icon" 
                         #tooltip="matTooltip"

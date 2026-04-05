@@ -42,6 +42,10 @@ export class InventoryView {
     if (!item.expiry) {
       return false;
     }
+
+    if (item.quantity <= 0) {
+      return false;
+    }
     
     const expiryTime = item.expiry.getTime();
     const warningThreshold = new Date().getTime() + InventoryView.expiryWarningThresholdMs; // today + expiryWarningThresholdMs(3) days
