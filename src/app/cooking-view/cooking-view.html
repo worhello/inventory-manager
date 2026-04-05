@@ -2,7 +2,7 @@
   <h2>Remove items from the inventory</h2>
 
   <div class="cooking-items-container">
-    @for (item of itemsToBeRemoved; track $index) {
+    @for (item of itemsToBeRemoved; track item) {
       <div class="cooking-item">
         <app-inventory-search-input
           (inventoryItemSelected)="onInventoryItemSelected(item, $event)"
