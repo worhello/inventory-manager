@@ -93,6 +93,16 @@ export class Settings {
   }
 
   private handleFileRead(readerEvent: ProgressEvent<FileReader>) {
+    try {
+      this._handleFileRead(readerEvent);
+    } catch(err) {
+      window.alert(`Issue when importing data: ${err}`);
+    } finally {
+      this.inventoryImportInput.nativeElement.value = '';
+    }
+  }
+
+  private _handleFileRead(readerEvent: ProgressEvent<FileReader>) {
       const content = (readerEvent.target?.result as string);
       if (!content) {
         return;
@@ -103,7 +113,7 @@ export class Settings {
 
       const lines = decoded.split('\n');
       if (lines[0] != this.fileHeaderRow.join(',')) {
-        return;
+        throw new Error('Missing or incorrect header in imported data');
       }
 
       const items: InventoryItem[] = [];
@@ -114,8 +124,15 @@ export class Settings {
           break;
         }
 
+        if (line.split(',').length != this.fileHeaderRow.length) {
+          throw new Error('Malformed data in import');
+        }
+
         // The order here is based on this.fileHeaderRow
         const [id, name, category, quantity, minQuantity, expiry, checked, quantityToBuy] = line.split(',');
+        if ([id, name, category, quantity, minQuantity].some(prop => !prop)) {
+          throw new Error('One or more required properties are missing');
+        }
 
         const item: InventoryItem = {
           id,
