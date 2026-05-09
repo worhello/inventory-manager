@@ -45,7 +45,7 @@
     "pretty-quick": "^4.2.2",
     "typescript": "~5.9.2",
     "typescript-eslint": "8.56.1",
-    "uuid": "^13.0.0",
+    "uuid": "^14.0.0",
     "vitest": "^4.0.8"
   }
 }
